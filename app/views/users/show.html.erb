@@ -1,0 +1,31 @@
+<header>
+    <h1>reresite</h1>
+    <div class="header-list">
+        <ul>
+            <% if current_user.id == @user.id %>
+                <li><%= link_to "編集する", edit_user_registration_path %></li>
+            <% end %>
+            <li><%= link_to "一覧に戻る", posts_path %></li>
+        </ul>
+    </div>
+</header>
+
+<div class="okawa">
+    <h3>マイページ</h3>
+    <p>名前 : <%= @user.name %></p>
+    <p>プロフィール : <%= @user.profile %></p>
+    <br>
+    <h2><p>ユーザーの投稿一覧</p></h2>
+        <div class="posts-container">
+        <% @user.posts.each do |t| %>
+            <div class="post">
+                <p><%= t.title %></p>
+                <p><%= t.body %></p>
+                <p><%= image_tag t.image1_url, size: "18%" if t.image1? %>
+                <%= image_tag t.image2_url, size: "18%" if t.image2? %>
+                <%= image_tag t.image3_url, size: "18%" if t.image3? %>
+                <%= image_tag t.image4_url, size: "18%" if t.image4? %></p>
+            </div>
+    <% end %>
+    </div>
+</div>

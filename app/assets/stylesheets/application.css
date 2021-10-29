@@ -1,0 +1,227 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #ffab2c;
+    height: 65px;
+    /* justify-content: flex-end; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1 {
+    color: #fff;
+    font-size: 200%;
+    margin-left: 20px;
+    text-align: left;
+}
+header a {
+    color: #fff; 
+    text-decoration: none; 
+}
+.header-list {
+    display: flex;
+    align-items: center;
+}
+header ul {
+    display: flex;
+}
+header li {
+    list-style: none;
+    margin-right: 40px;
+}
+.omiku{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.food {
+    width: 100%;
+}
+.food p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-weight: bold;
+    font-size: 3em;
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #e77d19; 
+    text-decoration: none; 
+}
+
+h3 {
+    text-align: center;
+    font-size: 200%;
+    color: rgba(255, 166, 0, 0.692);
+}
+
+html {
+    background-color: #ffab2c41;
+}
+
+.okawa {
+    height: 520px;
+}
+
+.field {
+    text-align: center;
+}
+
+#map {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.posts-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.post {
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    font-weight: bold;
+    background: rgba(180, 126, 126, 0);
+    border: solid 3px #e77d19;/*線*/
+    border-radius: 10px;/*角の丸み*/
+    width: 40%;
+}
+
+.post p {
+    margin: 0; 
+    padding: 0;
+    color: #f59609;
+}
+
+.post a {
+    color: #965e2b;
+}
+
+p {
+    text-align: center;
+    font-size: 100%;
+}
+
+h2 {
+    text-align: center;
+    font-size: 100%;
+    color: rgba(255, 166, 0, 0.692);
+}
+
+.comment-wrapper {
+    justify-content: center;
+    text-align: center;
+}
+
+.actions {
+    justify-content: center;
+    text-align: center;
+}
+
+footer{
+    height: 30%;
+    background-color: #ffab2c;
+    color: #fff;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0;
+}
+
+/* Star */
+.lecture_form{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 300px;
+    margin: 30px;
+}
+.name_field{
+    width: 200px;
+    margin-bottom: 30px;
+}
+
+/*以下新規投稿ページの星用のCSS*/
+
+.post_form{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    justify-content: center;
+}
+.post_form input[type='radio']{
+    display: none;
+}
+.post_form label{
+    position: relative;
+    padding: 10px 10px 0;
+    color: gray;
+    cursor: pointer;
+    font-size: 30px; /*星の大きさを変更するときはここ*/
+}
+.post_form label .text{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9px; /*星の上の説明書きの大きさを変更するときはここ*/
+    color: gray;
+}
+.post_form label:hover,
+.post_form label:hover ~ label,
+.post_form input[type='radio']:checked ~ label{
+color: #ffcc00;
+}
+
+
+/*以下一覧ページの星用のCSS*/
+
+.star-rating {
+    position: relative;
+    display: inline-block;
+    width: 5em;
+    height: 1em;
+    font-size: 25px;
+}
+.star-rating-front {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: #ffcc33;
+}
+.star-rating-back {
+    display: inline-block;
+    color: #ccc;
+}

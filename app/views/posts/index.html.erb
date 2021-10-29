@@ -1,0 +1,141 @@
+<header>
+    <h1>reresite</h1>
+    <div class="header-list">
+        <ul>
+            <% if user_signed_in? %>
+                <li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
+                <li><%= link_to "マイページへ", user_path(current_user.id) %></li>
+            <% else %>
+                <li><%= link_to '新規登録', new_user_registration_path %></li>
+                <li><%= link_to 'ログイン', new_user_session_path %></li>
+            <% end %>
+                <li><%= link_to "新規投稿へ", new_post_path %></li>
+        </ul>
+    </div>
+</header>
+    <div class="food">
+        <img src="/assets/food (3).jpg" alt="food (3).jpg" class="food">
+        <p>レストラン評価サイト</p>
+    </div>
+    <h3>投稿一覧</h3>
+    <div class="posts-container">
+        <% @posts.each do |t| %>
+            <div class="post">
+                <p><%= t.user.name %></p>
+                <p><%= t.title %></p>
+                <p><%= t.body %></p>
+                <p><%= image_tag t.image1_url, size: "18%" if t.image1? %>
+                <%= image_tag t.image2_url, size: "18%" if t.image2? %>
+                <%= image_tag t.image3_url, size: "18%" if t.image3? %>
+                <%= image_tag t.image4_url, size: "18%" if t.image4? %></p>
+                <% if user_signed_in? %>
+                    <% if current_user.already_liked?(t) %>
+                        <%= link_to post_like_path(id: t.id, post_id: t.id), method: :delete do %>
+                            <p><i class="fas fa-heart"></i><%= t.likes.count %></p>
+                        <% end %>
+                    <% else %>
+                        <%= link_to post_likes_path(id: t.id, post_id: t.id), method: :post do %>
+                            <p><i class="far fa-heart"></i><%= t.likes.count %></p>
+                        <% end %>
+                    <% end %>
+                <% else %>
+                    <p><i class="far fa-heart"></i><%= t.likes.count %></p>
+                <% end %>
+
+                <div>
+                <h2>総合評価：
+                <span class="star-rating">
+                <span class="star-rating-front" style="width: <%= getPercent(t.overall) %>%;">★★★★★</span>
+                <span class="star-rating-back">★★★★★</span>
+                </span> 
+                </h2>
+                </div>
+
+                <div>
+                <h2>美味しさ：
+                <span class="star-rating">
+                <span class="star-rating-front" style="width: <%= getPercent(t.taste) %>%;">★★★★★</span>
+                <span class="star-rating-back">★★★★★</span>
+                </span> 
+                </h2>
+                </div>
+
+                <div>
+                <h2>雰囲気：
+                <span class="star-rating">
+                <span class="star-rating-front" style="width: <%= getPercent(t.ambiance) %>%;">★★★★★</span>
+                <span class="star-rating-back">★★★★★</span>
+                </span> 
+                </h2>
+                </div>
+
+                <div>
+                <h2>アクセス：
+                <span class="star-rating">
+                <span class="star-rating-front" style="width: <%= getPercent(t.access) %>%;">★★★★★</span>
+                <span class="star-rating-back">★★★★★</span>
+                </span> 
+                </h2>
+                </div>
+                <br>
+                <p><%= t.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+                <br>
+                <p><%= link_to "詳細へ", post_path(t.id) %>
+                <% if user_signed_in? && current_user.id == t.user_id %> 
+                    <%= link_to "編集する", edit_post_path(t.id) %>
+                    <%= link_to "削除する", post_path(t.id), method: :delete, data: { confirm: "削除しますか？" } %></p>
+                <% end %> 
+            </div>
+        <% end %>
+    </div>
+
+<%#= 追加 %>
+<%#= mapが表示される部分 %>
+<div id="map"></div>
+
+<%#= 追加 %>
+<%#= <div id="map"></div>の大きさを定義 400px×400px 〇〇.scssに書いても良い。 %>
+<style>
+    #map {
+        height: 400px;
+        width: 400px;
+    }
+</style>
+
+<%#= mapを実際に表示させる関数をまとめた部分、バックエンドのためユーザーからは見れない。%>
+<script>
+    let map
+
+    // mapの表示関数 
+    function initMap() {
+        geocoder = new google.maps.Geocoder()
+
+        // mapの初期位置, 縮尺を定義
+        map = new google.maps.Map(document.getElementById("map"),{
+            //google mapの中心位置。lat：緯度、lng：経度 緯度経度は適宜変更可能。
+            center: {
+                lat: 35.6458437,
+                lng: 135.7046171
+            },
+            //初期表示の拡大・縮小ができる(数字が小さいほど縮小される。)
+            zoom: 6,
+        });
+
+        // 投稿テーブルにあるそれぞれのレコードをmap上に表示 @posts部分を自分のコントローラーに合うように変更すること。
+        <% @posts.each do |m| %>
+            (function(){
+            var contentString = "住所：<%= m.address %>"; 
+
+            // マーカーを立てる
+            var marker = new google.maps.Marker({
+                position:{lat: <%= m.latitude %>, lng: <%= m.longitude %>},
+                map: map,
+                title: contentString
+            });
+
+            })();
+        <% end %>
+    }
+</script>
+<%#= .envファイルに書かれているAPIキーを呼び出す部分。%>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['API_KEY']%>&callback=initMap" async defer></script>

@@ -1,0 +1,158 @@
+<header>
+    <h1>reresite</h1>
+    <div class="header-list">
+        <ul>
+            <li><%= link_to "一覧に戻る", posts_path %></li>
+        </ul>
+    </div>
+</header>
+
+<h3>新規投稿</h3>
+<%= form_for @post do |f| %>
+    <div class="field">
+        <%= f.label :店名 %>
+        <p><%= f.text_field :title, :size => 30 %></p>
+        <%= f.label :内容 %>
+        <p><%= f.text_area :body, :size => "50x10" %></p>
+        <%= f.label :画像 %>
+        <p><%= f.file_field :image1 %></p>
+        <p><%= f.file_field :image2 %></p>
+        <p><%= f.file_field :image3 %></p>
+        <p><%= f.file_field :image4 %></p>
+        <br>
+        <h5>総合評価</h5>
+        <div class="post_form">
+            <%= f.radio_button :overall, 5 ,id: 'star1'%>
+            <label for="star1"><span class="text">最高</span>★</label>
+
+            <%= f.radio_button :overall, 4 ,id: 'star2'%>
+            <label for="star2"><span class="text">良い</span>★</label>
+
+            <%= f.radio_button :overall, 3 ,id: 'star3'%>
+            <label for="star3"><span class="text">普通</span>★</label>
+
+            <%= f.radio_button :overall, 2 ,id: 'star4'%>
+            <label for="star4"><span class="text">悪い</span>★</label>
+
+            <%= f.radio_button :overall, 1 ,id: 'star5'%>
+            <label for="star5"><span class="text">最悪</span>★</label>
+        </div>
+
+        <h5>美味しさ</h5>
+        <div class="post_form">
+            <%= f.radio_button :taste, 5 ,id: 'star6'%>
+            <label for="star6"><span class="text">最高</span>★</label>
+
+            <%= f.radio_button :taste, 4 ,id: 'star7'%>
+            <label for="star7"><span class="text">美味しい</span>★</label>
+
+            <%= f.radio_button :taste, 3 ,id: 'star8'%>
+            <label for="star8"><span class="text">普通</span>★</label>
+
+            <%= f.radio_button :taste, 2 ,id: 'star9'%>
+            <label for="star9"><span class="text">不味い</span>★</label>
+
+            <%= f.radio_button :taste, 1 ,id: 'star10'%>
+            <label for="star10"><span class="text">最悪</span>★</label>
+        </div>
+
+        <h5>雰囲気</h5>
+        <div class="post_form">
+            <%= f.radio_button :ambiance, 5 ,id: 'star11'%>
+            <label for="star11"><span class="text">最高</span>★</label>
+
+            <%= f.radio_button :ambiance, 4 ,id: 'star12'%>
+            <label for="star12"><span class="text">良い</span>★</label>
+
+            <%= f.radio_button :ambiance, 3 ,id: 'star13'%>
+            <label for="star13"><span class="text">普通</span>★</label>
+
+            <%= f.radio_button :ambiance, 2 ,id: 'star14'%>
+            <label for="star14"><span class="text">悪い</span>★</label>
+
+            <%= f.radio_button :ambiance, 1 ,id: 'star15'%>
+            <label for="star15"><span class="text">最悪</span>★</label>
+        </div>
+
+        <h5>アクセス</h5>
+        <div class="post_form">
+            <%= f.radio_button :access, 5 ,id: 'star16'%>
+            <label for="star16"><span class="text">最高</span>★</label>
+
+            <%= f.radio_button :access, 4 ,id: 'star17'%>
+            <label for="star17"><span class="text">良い</span>★</label>
+
+            <%= f.radio_button :access, 3 ,id: 'star18'%>
+            <label for="star18"><span class="text">普通</span>★</label>
+
+            <%= f.radio_button :access, 2 ,id: 'star19'%>
+            <label for="star19"><span class="text">悪い</span>★</label>
+
+            <%= f.radio_button :access, 1 ,id: 'star20'%>
+            <label for="star20"><span class="text">最悪</span>★</label>
+        </div>
+    </div>
+
+        <%#= 追加、addressカラムに保存するためのフォーム form_for ~ endの中で作成 %>
+    <div class="field">
+        <%= f.label :住所 %>
+        <%= f.text_field :address, :size => 50 %>
+    </div>
+    <%#= 追加、addressカラムの情報を地図で表示させるためのボタン、クリックするとcodeAddress()が実行%>
+    <div class="field">
+        <input type="button" value="場所を地図で表示" onclick="codeAddress()">
+    </div>
+
+    <%#= 追加、mapが表示される部分 %>
+    <div id="map"></div>
+
+    <%#= 追加、<div id="map"></div>の大きさを定義 400px×400px 〇〇.scssに書いても良い。 %>
+    <style>
+        #map {
+            height: 400px;
+            width: 400px;
+        }
+    </style>
+
+<script>
+let map
+
+    //mapの表示関数。center:{lat:〇〇,lng:〇〇},zoom: 〇,の〇は好きな値に変更可能。
+    function initMap(){
+    geocoder = new google.maps.Geocoder()
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 43.220327, lng:142.863474},
+        zoom: 7,
+    });
+    }
+
+    let geocoder
+
+    //<input type="button" value="場所を地図で表示" onclick="codeAddress()">の具体的な中身
+    function codeAddress(){
+    //右辺のtweet_addressの部分はaddressカラムの入力フォームの "id" を書く。今回はf.text_field :addressの部分
+    //idの確認方法はgoogle chromeのデベロッパーツールでみる。
+    let inputAddress = document.getElementById('post_address').value;
+
+    geocoder.geocode( { 'address': inputAddress}, function(results, status) {
+        if (status == 'OK') {
+        map.setCenter(results[0].geometry.location);
+        map.setZoom(17);
+        var marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+        });
+        } else {
+        alert('該当する結果がありませんでした：' + status);
+        }
+    });   
+}
+
+</script>
+<%#= .envファイルに書かれているAPIキーを呼び出す部分。%>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['API_KEY']%>&callback=initMap" async defer></script>
+    <div class="actions">
+        <%= f.submit "投稿する" %>
+    </div>
+<% end %>

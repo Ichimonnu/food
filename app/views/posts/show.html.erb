@@ -1,0 +1,147 @@
+<header>
+    <h1>reresite</h1>
+    <div class="header-list">
+        <ul>
+            <% if user_signed_in? && current_user.id == @post.user_id %> 
+                <li><%= link_to "編集する", edit_post_path(@post.id) %></li>
+                <li><%= link_to "削除する", post_path(@post.id), method: :delete, data: { confirm: "削除しますか？" } %></li>
+            <% end %> 
+                <li><%= link_to "一覧に戻る", posts_path %></li>
+        </ul>
+    </div>
+</header>
+
+<h3>詳細</h3>
+<div class="posts-container">
+<div class="post">
+    <p><%= @post.user.name %></p>
+    <p><%= @post.title %></p>
+    <p><%= @post.body %></p>
+    <p><%= image_tag @post.image1_url, size: "18%" if @post.image1? %>
+    <%= image_tag @post.image2_url, size: "18%" if @post.image2? %>
+    <%= image_tag @post.image3_url, size: "18%" if @post.image3? %>
+    <%= image_tag @post.image4_url, size: "18%" if @post.image4? %></p>
+    <% if user_signed_in? %>
+        <% if current_user.already_liked?(@post) %>
+            <%= link_to post_like_path(@post), method: :delete do %>
+                <p><i class="fas fa-heart"></i><%= @post.likes.count %></p>
+            <% end %>
+        <% else %>
+            <%= link_to post_likes_path(@post), method: :post do %>
+                <p><i class="far fa-heart"></i><%= @post.likes.count %></p>
+            <% end %>
+        <% end %>
+    <% else %>
+        <p><i class="far fa-heart"></i><%= @post.likes.count %></p>
+    <% end %>
+    <div>
+    <h2>総合評価：
+    <span class="star-rating">
+    <span class="star-rating-front" style="width: <%= getPercent(@post.overall) %>%;">★★★★★</span>
+    <span class="star-rating-back">★★★★★</span>
+    </span> 
+    </h2>
+    </div>
+
+    <div>
+    <h2>美味しさ：
+    <span class="star-rating">
+    <span class="star-rating-front" style="width: <%= getPercent(@post.taste) %>%;">★★★★★</span>
+    <span class="star-rating-back">★★★★★</span>
+    </span> 
+    </h2>
+    </div>
+
+    <div>
+    <h2>雰囲気：
+    <span class="star-rating">
+    <span class="star-rating-front" style="width: <%= getPercent(@post.ambiance) %>%;">★★★★★</span>
+    <span class="star-rating-back">★★★★★</span>
+    </span> 
+    </h2>
+    </div>
+
+    <div>
+    <h2>アクセス：
+    <span class="star-rating">
+    <span class="star-rating-front" style="width: <%= getPercent(@post.access) %>%;">★★★★★</span>
+    <span class="star-rating-back">★★★★★</span>
+    </span> 
+    </h2>
+    </div>
+    <br>
+    <p><%= @post.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+</div>
+</div>
+
+<h2>いいねしたユーザー</h2>
+<% @post.liked_users.each do |user| %>
+    <p><%= user.name %></p>
+<% end %>
+<br>
+<h2>コメント一覧</h2>
+<div class="comment-wrapper">
+    <% @comments.each do |c| %>
+        <div>
+        <%= c.user.name unless c.user.blank? %>
+        <br>
+        <%= c.content %>
+        </div>
+        <br>
+    <% end %>
+
+    <% if user_signed_in? %>
+        <%= form_with(model: [@post, @comment], local: true) do |f| %>
+        <%= f.text_area :content %>
+        <%= button_tag type: "submit" do %>
+            <i class="far fa-comments"></i> コメントする
+        <% end %>
+        <% end %>
+    <% end %>
+</div>
+
+<%#= 追加mapが表示される部分 %>
+<div id="map"></div>
+
+<%#= 追加<div id="map"></div>の大きさを定義 400px×400px 〇〇.scssに書いても良い。 %>
+<style>
+    #map {
+        height: 400px;
+        width: 400px;
+    }
+</style>
+<%#= 追加mapを実際に表示させる関数をまとめた部分、バックエンドのためユーザーからは見れない。%>
+<script>
+    let map
+
+    // mapの表示関数 
+    function initMap() {
+        geocoder = new google.maps.Geocoder()
+
+        map = new google.maps.Map(document.getElementById("map"), {
+        center: {
+            //@postにlatitude,longitudeの情報が入っている。@postは自分のコントローラーに合うように適宜変更すること。
+            lat: <%= @post.latitude %> ,
+            lng: <%= @post.longitude %>
+        },
+        zoom: 14,
+        });
+
+        (function () {
+        var contentString = "住所：<%= @post.address %>";
+
+        var marker = new google.maps.Marker({
+            //@postにlatitude,longitudeの情報が入っている。@postは自分のコントローラーに合うように適宜変更すること。
+            position: {
+            lat: <%= @post.latitude %>,
+            lng: <%= @post.longitude %>
+            },
+            map: map,
+            title: contentString
+        });
+
+        })();
+    }
+</script>
+<%#= .envファイルに書かれているAPIキーを呼び出す部分。%>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['API_KEY']%>&callback=initMap" async defer></script>
