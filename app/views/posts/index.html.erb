@@ -15,33 +15,22 @@
 </header>
     <div class="food">
         <img src="/assets/food (3).jpg" alt="food (3).jpg" class="food">
-        <p>レストラン評価サイト!</p>
+        <p>レストラン評価サイト</p>
     </div>
     <h3>投稿一覧</h3>
     <div class="posts-container">
         <% @posts.each do |t| %>
             <div class="post">
                 <p><%= t.user.name %></p>
+                <br>
                 <p><%= t.title %></p>
                 <p><%= t.body %></p>
+                <br>
                 <p><%= image_tag t.image1_url, size: "18%" if t.image1? %>
                 <%= image_tag t.image2_url, size: "18%" if t.image2? %>
                 <%= image_tag t.image3_url, size: "18%" if t.image3? %>
                 <%= image_tag t.image4_url, size: "18%" if t.image4? %></p>
-                <% if user_signed_in? %>
-                    <% if current_user.already_liked?(t) %>
-                        <%= link_to post_like_path(id: t.id, post_id: t.id), method: :delete do %>
-                            <p><i class="fas fa-heart"></i><%= t.likes.count %></p>
-                        <% end %>
-                    <% else %>
-                        <%= link_to post_likes_path(id: t.id, post_id: t.id), method: :post do %>
-                            <p><i class="far fa-heart"></i><%= t.likes.count %></p>
-                        <% end %>
-                    <% end %>
-                <% else %>
-                    <p><i class="far fa-heart"></i><%= t.likes.count %></p>
-                <% end %>
-
+                <br>
                 <div>
                 <h2>総合評価：
                 <span class="star-rating">
@@ -78,6 +67,19 @@
                 </h2>
                 </div>
                 <br>
+                <% if user_signed_in? %>
+                    <% if current_user.already_liked?(t) %>
+                        <%= link_to post_like_path(id: t.id, post_id: t.id), method: :delete do %>
+                            <p><i class="fas fa-heart"></i><%= t.likes.count %></p>
+                        <% end %>
+                    <% else %>
+                        <%= link_to post_likes_path(id: t.id, post_id: t.id), method: :post do %>
+                            <p><i class="far fa-heart"></i><%= t.likes.count %></p>
+                        <% end %>
+                    <% end %>
+                <% else %>
+                    <p><i class="far fa-heart"></i><%= t.likes.count %></p>
+                <% end %>
                 <p><%= t.created_at.strftime("%Y-%m-%d %H:%M") %></p>
                 <br>
                 <p><%= link_to "詳細へ", post_path(t.id) %>
