@@ -18,6 +18,11 @@
         <p>レストラン評価サイト</p>
     </div>
     <h3>投稿一覧</h3>
+    <br>
+    <div class="actions">
+    <p><%= page_entries_info @posts %></p>
+    <%= paginate @posts %>
+    </div>
     <div class="posts-container">
         <% @posts.each do |t| %>
             <div class="post">
