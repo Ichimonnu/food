@@ -226,3 +226,29 @@ color: #ffcc00;
     display: inline-block;
     color: #ccc;
 }
+
+.hiro {
+        /* display: flex; */
+        display: inline-block;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        /* width: auto; */
+        /* border: solid; */
+        
+        /* color: black; */
+        transition-duration: 0.5s;
+}
+.hiro:hover{
+        /* display: flex; */
+        display: inline-block;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        /* width: auto; */
+        /* border: solid; */
+        
+        /* color: white; */
+        background-color: #ffab2c41;
+        transition-duration: 0.5s;
+    }

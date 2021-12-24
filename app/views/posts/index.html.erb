@@ -26,7 +26,11 @@
     <div class="posts-container">
         <% @posts.each do |t| %>
             <div class="post">
-                <p><%= t.user.name %></p>
+                <p><% if user_signed_in? %>
+                    <a href="/users/<%= t.user_id %>"><%= t.user.name %></a>
+                <% else %>
+                    <%= t.user.name %>
+                <% end %></p>
                 <br>
                 <p><%= t.title %></p>
                 <p><%= t.body %></p>
@@ -87,13 +91,17 @@
                 <% end %>
                 <p><%= t.created_at.strftime("%Y-%m-%d %H:%M") %></p>
                 <br>
-                <p><%= link_to "詳細へ", post_path(t.id) %>
+                <div class ="hiro"><p><%= link_to "詳細へ", post_path(t.id) %></div>
                 <% if user_signed_in? && current_user.id == t.user_id %> 
-                    <%= link_to "編集する", edit_post_path(t.id) %>
-                    <%= link_to "削除する", post_path(t.id), method: :delete, data: { confirm: "削除しますか？" } %></p>
+                    <div class ="hiro"><%= link_to "編集する", edit_post_path(t.id) %></div>
+                    <div class ="hiro"><%= link_to "削除する", post_path(t.id), method: :delete, data: { confirm: "削除しますか？" } %></p></div>
                 <% end %> 
             </div>
-        <% end %>
+            <!--pv数-->
+            <%= t.impressions_count %>閲覧数
+            <% end %>
+            <br>
+        
     </div>
 
 <%#= 追加 %>
@@ -146,3 +154,5 @@
 </script>
 <%#= .envファイルに書かれているAPIキーを呼び出す部分。%>
 <script src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['API_KEY']%>&callback=initMap" async defer></script>
+
+<p><a href="mailto:ayakarasu12@gmail.com">お問い合わせはこちらへ</a></p>

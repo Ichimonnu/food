@@ -9,7 +9,7 @@
         </ul>
     </div>
 </header>
-
+    <%= render 'relationships/follow_button', user: @user %>
     <h3>マイページ</h3>
     <p>名前 : <%= @user.name %></p>
     <p>プロフィール : <%= @user.profile %></p>

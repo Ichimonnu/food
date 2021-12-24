@@ -2,6 +2,7 @@ class PostsController < ApplicationController
     before_action :authenticate_user!, only: [:new, :create]
     def index
         @posts = Post.all.page(params[:page]).per(3).order("id DESC")
+        @rank_posts = Post.order(impressions_count: 'DESC') # ソート機能を追加
     end
 
     def link
@@ -25,6 +26,7 @@ class PostsController < ApplicationController
         @post = Post.find(params[:id])
         @comments = @post.comments
         @comment = Comment.new
+        impressionist(@post, nil, unique: [:ip_address]) # 追記
     end
 
     def edit
